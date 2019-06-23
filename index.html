@@ -20,8 +20,8 @@
 
        var x = canvas.width/2;
        var y = canvas.height-30;
-       var dx = 1;
-       var dy = -1;
+       var dx = 2;
+       var dy = -2;
        var ballRadius = 10;
        var ballColor = "0095DD"; //('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
        var paddleHeight = 10;
@@ -90,7 +90,7 @@
                             if (score == brickRowCount * brickColumnCount) {
                                 alert("YOU WIN, CONGRATULATIONS!");
                                 document.location.reload();
-                                clearInterval(interval);  // needed for Chrome to end game
+                                //clearInterval(interval);  // needed for Chrome to end game
                             }
                         }
                    }
@@ -170,7 +170,7 @@
                else {
                     alert("GAME OVER!");
                     document.location.reload();
-                    clearInterval(interval); //neede for Chrome to end game
+                    //clearInterval(interval); //neede for Chrome to end game
                }
                
            }
@@ -181,9 +181,12 @@
            else if (leftPressed && paddleX > 0) {
                paddleX -= 7;
            }
+
+           requestAnimationFrame(draw);
        }
 
-       var interval = setInterval(draw, 10);
+       //var interval = setInterval(draw, 10);
+       draw();
 
     </script>
 
