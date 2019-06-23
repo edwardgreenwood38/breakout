@@ -20,10 +20,37 @@
 
        var x = canvas.width/2;
        var y = canvas.height-30;
-       var dx = 2;
+       var dx = 1;
        var dy = -1;
        var ballRadius = 10;
-       var ballColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+       var ballColor = "0095DD"; //('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+       var paddleHeight = 10;
+       var paddleWidth = 75;
+       var paddleX = (canvas.width-paddleWidth) / 2;
+       var rightPressed = false;
+       var leftPressed = false;
+
+
+       document.addEventListener("keydown", keyDownHandler, false);
+       document.addEventListener("keyup", keyUpHandler, false);
+
+       function keyDownHandler(e) {
+           if(e.key == "Right" || e.key == "ArrowRight") {
+               rightPressed = true;
+           }
+           else if(e.key == "Left" || e.key == "ArrowLeft") {
+               leftPressed = true;
+           }
+       }
+
+       function keyUpHandler(e) {
+           if(e.key == "Right" || e.key == "ArrowRight") {
+               rightPressed = false;
+           }
+           else if(e.key == "Left" || e.key == "ArrowLeft") {
+               leftPressed = false;
+           }
+       }
 
        function drawBall() {
         ctx.beginPath();
@@ -32,19 +59,39 @@
            ctx.fill();
            ctx.closePath();        
        }
-        
+       
+       function drawPaddle(){
+           ctx.beginPath();
+           ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+           ctx.fillStyle = "#0095DD";
+           ctx.fill();
+           ctx.closePath();
+       }
+
        function draw() {
            ctx.clearRect(0, 0, canvas.width, canvas.height);
            drawBall();
+           drawPaddle();
+
            //drawBall(25, 5);
            x += dx;
            y += dy;
            if (x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+               //if (dx > 0 && dx < 20) { dx += .1 }
+               //else { dx -= .1 }
+
                dx = -dx;
-               ballColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+               //ballColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
            }
            if (y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
                dy = -dy;
+           }
+
+           if (rightPressed && paddleX < canvas.width - paddleWidth) {
+               paddleX += 7;
+           }
+           else if (leftPressed && paddleX > 0) {
+               paddleX -= 7;
            }
        }
 
