@@ -20,23 +20,32 @@
 
        var x = canvas.width/2;
        var y = canvas.height-30;
-       var dx = -.2;
-       var dy = -.1;
+       var dx = 2;
+       var dy = -1;
+       var ballRadius = 10;
+       var ballColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
 
-       function drawBall(of1, of2) {
+       function drawBall() {
         ctx.beginPath();
-           ctx.arc(x + of1, y + of2, 10, 0, Math.PI*2);
-           ctx.fillStyle = "#0095DD";
+           ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+           ctx.fillStyle = "#" + ballColor;
            ctx.fill();
            ctx.closePath();        
        }
         
        function draw() {
            ctx.clearRect(0, 0, canvas.width, canvas.height);
-           drawBall(0,0);
+           drawBall();
            //drawBall(25, 5);
            x += dx;
            y += dy;
+           if (x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+               dx = -dx;
+               ballColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+           }
+           if (y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
+               dy = -dy;
+           }
        }
 
        setInterval(draw, 10);
