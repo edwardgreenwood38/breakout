@@ -83,8 +83,19 @@
                dx = -dx;
                //ballColor = ('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
            }
-           if (y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
+           if (y + dy < ballRadius) {
                dy = -dy;
+           }
+           else if (y + dy > canvas.height-ballRadius) {
+               if (x > paddleX && x < paddleX + paddleWidth) {
+                   dy = -dy;
+               }
+               else {
+                    alert("GAME OVER!");
+                    document.location.reload();
+                    clearInterval(interval); //neede for Chrome to end game
+               }
+               
            }
 
            if (rightPressed && paddleX < canvas.width - paddleWidth) {
@@ -95,7 +106,7 @@
            }
        }
 
-       setInterval(draw, 10);
+       var interval = setInterval(draw, 10);
 
     </script>
 
