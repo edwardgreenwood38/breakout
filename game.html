@@ -40,7 +40,9 @@
                 this.canvas.style.cursor = "none"; // hide origin cursor
                 this.context = this.canvas.getContext("2d");
                 document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.frameNo = 0; // for multiple obstales
                 this.interval = setInterval(updateGameArea, 20);
+
                 // will follow mouse
                 /*window.addEventListener('mousemove', function(e) { 
                     myGameArea.x = e.pageX;
@@ -66,6 +68,11 @@
             stop: function() {
                 clearInterval(this.interval);
             }
+        }
+
+        function everyInterval(n) {
+            if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
+            return false;
         }
 
         function component(width, height, color, x, y) {
@@ -108,6 +115,7 @@
             }
             else {
                 myGameArea.clear();
+                myObstacle.x += -1;
                 // set to same position as cursor or touch (realtime)
                 if (myGameArea.x && myGameArea.y) {  
                     myGamePiece.x = myGameArea.x;
