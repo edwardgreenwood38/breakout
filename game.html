@@ -24,10 +24,12 @@
     <script>
 
         var myGamePiece;
+        var myObstacle;
 
         function startGame() {
-            myGameArea.start();
             myGamePiece = new component(30, 30, "red", 10, 120);
+            myObstacle = new component(10, 200, "green", 300, 120);
+            myGameArea.start();
         }
 
         var myGameArea = {
@@ -60,6 +62,9 @@
             },
             clear: function () {
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function() {
+                clearInterval(this.interval);
             }
         }
 
@@ -79,27 +84,50 @@
                 this.x += this.speedX;
                 this.y += this.speedY;
             }
+            this.crashWith = function(otherobj) {
+                var myLeft = this.x;
+                var myRight = this.x + (this.width);
+                var myTop = this.y;
+                var myBottom = this.y + (this.height);
+                var otherLeft = otherobj.x;
+                var otherRight = otherobj.x + (otherobj.width);
+                var otherTop = otherobj.y;
+                var otherBottom = otherobj.y + (this.height);
+                var crash = true;
+                if ((myBottom < otherTop) || (myTop > otherBottom) || (myRight < otherLeft) || (myLeft > otherRight)) {
+                    crash = false;
+                }
+                
+                return crash;
+            }
         }
 
         function updateGameArea() {
-            myGameArea.clear();
-            // set to same position as cursor or touch (realtime)
-            if (myGameArea.x && myGameArea.y) {  
-                myGamePiece.x = myGameArea.x;
-                myGamePiece.y = myGameArea.y;
+            if (myGamePiece.crashWith(myObstacle)) {
+                myGameArea.stop();
             }
+            else {
+                myGameArea.clear();
+                // set to same position as cursor or touch (realtime)
+                if (myGameArea.x && myGameArea.y) {  
+                    myGamePiece.x = myGameArea.x;
+                    myGamePiece.y = myGameArea.y;
+                }
 
-            // multi key board
-            /*myGamePiece.speedX = 0;
-            myGamePiece.speedY = 0;
-            if (myGameArea.keys && myGameArea.keys[37]) { myGamePiece.speedX = -1; }
-            if (myGameArea.keys && myGameArea.keys[39]) { myGamePiece.speedX = 1; }
-            if (myGameArea.keys && myGameArea.keys[38]) { myGamePiece.speedY = -1; }
-            if (myGameArea.keys && myGameArea.keys[40]) { myGamePiece.speedY = 1; } */
+                // multi key board
+                /*myGamePiece.speedX = 0;
+                myGamePiece.speedY = 0;
+                if (myGameArea.keys && myGameArea.keys[37]) { myGamePiece.speedX = -1; }
+                if (myGameArea.keys && myGameArea.keys[39]) { myGamePiece.speedX = 1; }
+                if (myGameArea.keys && myGameArea.keys[38]) { myGamePiece.speedY = -1; }
+                if (myGameArea.keys && myGameArea.keys[40]) { myGamePiece.speedY = 1; } */
             
-            // update sreen
-            myGamePiece.newPos();
-            myGamePiece.update();
+                // update sreen
+                myObstacle.update();
+                myGamePiece.newPos();
+                myGamePiece.update();
+            }
+            
         }
 
         function moveUp() {
