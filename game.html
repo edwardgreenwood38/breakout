@@ -24,7 +24,7 @@
     <script>
 
         var myGamePiece;
-        var myObstacle;
+        var myObstacles = [];
 
         function startGame() {
             myGamePiece = new component(30, 30, "red", 10, 120);
@@ -44,10 +44,10 @@
                 this.interval = setInterval(updateGameArea, 20);
 
                 // will follow mouse
-                /*window.addEventListener('mousemove', function(e) { 
+                window.addEventListener('mousemove', function(e) { 
                     myGameArea.x = e.pageX;
                     myGameArea.y = e.pageY;
-                }) */
+                }) 
                 // touch screen follow
                 window.addEventListener('touchmove', function(e) {
                     myGameArea.x = e.touches[0].screenX;
@@ -99,7 +99,7 @@
                 var otherLeft = otherobj.x;
                 var otherRight = otherobj.x + (otherobj.width);
                 var otherTop = otherobj.y;
-                var otherBottom = otherobj.y + (this.height);
+                var otherBottom = otherobj.y + (otherobj.height);
                 var crash = true;
                 if ((myBottom < otherTop) || (myTop > otherBottom) || (myRight < otherLeft) || (myLeft > otherRight)) {
                     crash = false;
@@ -110,34 +110,54 @@
         }
 
         function updateGameArea() {
-            if (myGamePiece.crashWith(myObstacle)) {
-                myGameArea.stop();
-            }
-            else {
-                myGameArea.clear();
-                myObstacle.x += -1;
-                // set to same position as cursor or touch (realtime)
-                if (myGameArea.x && myGameArea.y) {  
-                    myGamePiece.x = myGameArea.x;
-                    myGamePiece.y = myGameArea.y;
+            
+            // multi obstales
+            var x, y;
+            for (i = 0; i < myObstacles.length; i += 1) {
+                if (myGamePiece.crashWith(myObstacles[i])) {
+                    myGameArea.stop();
+                    return;
                 }
-
-                // multi key board
-                /*myGamePiece.speedX = 0;
-                myGamePiece.speedY = 0;
-                if (myGameArea.keys && myGameArea.keys[37]) { myGamePiece.speedX = -1; }
-                if (myGameArea.keys && myGameArea.keys[39]) { myGamePiece.speedX = 1; }
-                if (myGameArea.keys && myGameArea.keys[38]) { myGamePiece.speedY = -1; }
-                if (myGameArea.keys && myGameArea.keys[40]) { myGamePiece.speedY = 1; } */
-            
-                // update sreen
-                myObstacle.update();
-                myGamePiece.newPos();
-                myGamePiece.update();
             }
+
+            myGameArea.clear();
+            myGameArea.frameNo += 1;
+
+            if (myGameArea.frameNo == 1 || everyInterval(150)) {
+                x = myGameArea.canvas.width;
+                y = myGameArea.canvas.height - 200;
+                myObstacles.push(new component(10, 200, "green", x, y));
+            }
+            for (i = 0; i < myObstacles.length; i += 1) {
+                myObstacles[i].x += -1;
+                myObstacles[i].update();
+            }
+
+            // set to same position as cursor or touch (realtime)
+            /*if (myGameArea.x && myGameArea.y) {  
+                myGamePiece.x = myGameArea.x;
+                myGamePiece.y = myGameArea.y;
+            } */
+
+            // multi key board
+            myGamePiece.speedX = 0;
+            myGamePiece.speedY = 0;
+            if (myGameArea.keys && myGameArea.keys[37]) { myGamePiece.speedX = -1; }
+            if (myGameArea.keys && myGameArea.keys[39]) { myGamePiece.speedX = 1; }
+            if (myGameArea.keys && myGameArea.keys[38]) { myGamePiece.speedY = -1; }
+            if (myGameArea.keys && myGameArea.keys[40]) { myGamePiece.speedY = 1; } 
             
+
+            // update sreen
+            //myObstacle.update();
+            myGamePiece.newPos();
+            myGamePiece.update(); 
+            
+
         }
 
+
+        // buttons below canvas move fucntion
         function moveUp() {
             myGamePiece.speedY -= 1;
         }
