@@ -26,6 +26,7 @@
         var myGamePiece;
         var myObstacles = [];
         var myScore;
+        var heloFlightNo = 0;
 
         function startGame() {
             myGamePiece = new component(56, 20, "helicopter-1.png", 10, 120, "image")
@@ -72,6 +73,11 @@
         }
 
         function everyInterval(n) {
+            if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
+            return false;
+        }
+
+        function heloFlight(n) {
             if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
             return false;
         }
@@ -138,6 +144,44 @@
 
             myGameArea.clear();
             myGameArea.frameNo += 1;
+
+            // helo automation
+            if ((myGameArea.frameNo % 10) == 0) { heloFlightNo++; }
+            if (heloFlightNo == 0) { myGamePiece.image.src = "helicopter-1.png"; } 
+            else if (heloFlightNo == 1) { myGamePiece.image.src = "helicopter-2.png"; }
+            else if (heloFlightNo == 2) { myGamePiece.image.src = "helicopter-3.png"; }
+            else if (heloFlightNo == 3) { 
+                myGamePiece.image.src = "helicopter-4.png";
+                heloFlightNo = -1;    
+            }
+
+            myGamePiece.update();
+
+            /*if (heloFlight(50)) {
+                if (heloFlightNo > 3) { heloFlightNo = 0; }
+                else { heloFlightNo++; }
+                switch (heloFlightNo) {
+                    case 0: 
+                        myGamePiece.image.scr = "helicopter-1.png";
+                        myGamePiece.update();
+                        break;
+                    case 1: 
+                        myGamePiece.image.scr = "helicopter-2.png";
+                        myGamePiece.update();
+                        break;
+                    case 2: 
+                        myGamePiece.image.scr = "helicopter-3.png";
+                        myGamePiece.update();
+                        break;
+                    case 3: 
+                        myGamePiece.image.scr = "helicopter-4.png";
+                        myGamePiece.update();
+                        break;
+                    default:
+                        myGamePiece.image.scr = "helicopter-1.png";
+                        myGamePiece.update();
+                }
+            } */
 
             // top, gap, bottom obstales creation
             if (myGameArea.frameNo == 1 || everyInterval(150)) {
