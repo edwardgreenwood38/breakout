@@ -27,9 +27,11 @@
         var myObstacles = [];
         var myScore;
         var heloFlightNo = 0;
+        var myBackground;
 
         function startGame() {
             myGamePiece = new component(56, 20, "helicopter-1.png", 10, 120, "image")
+            myBackground = new component(480, 270, "bg_landscrpe.jpg", 0, 0, "image");
             myScore = new component("30px", "Consolas", "black", 280, 40, "text")
             myGameArea.start();
         }
@@ -143,10 +145,12 @@
             }
 
             myGameArea.clear();
+            myBackground.newPos();
+            myBackground.update();
             myGameArea.frameNo += 1;
 
             // helo automation
-            if ((myGameArea.frameNo % 10) == 0) { heloFlightNo++; }
+            if ((myGameArea.frameNo % 5) == 0) { heloFlightNo++; }
             if (heloFlightNo == 0) { myGamePiece.image.src = "helicopter-1.png"; } 
             else if (heloFlightNo == 1) { myGamePiece.image.src = "helicopter-2.png"; }
             else if (heloFlightNo == 2) { myGamePiece.image.src = "helicopter-3.png"; }
